@@ -2,6 +2,8 @@
 
 Expo (React Native) mobile app that replicates the **Promoter App** UI and workflow. Built from scratch with **NativeWind (Tailwind CSS)** and a clear, maintainable structure.
 
+> **✅ Navigation Fix Applied:** The `MISSING_CONTEXT_ERROR` has been resolved. See [FIX_APPLIED.md](./FIX_APPLIED.md) for details.
+
 ## Structure
 
 ```
@@ -30,12 +32,30 @@ infoapp/
 - **Layout**: gradient-style header with logo + title, rounded content panel, bottom tab bar (Home, Products, My Sales, Earnings, Bank, Profile).
 - **Components**: reusable Button (variants/sizes), Card (Header/Title/Content/Footer), Badge, Input, Label, Separator.
 
+## Quick Setup
+
+```bash
+# Run the setup script (installs dependencies and creates .env)
+./setup.sh
+
+# Or manually:
+npm install
+cp .env.example .env
+```
+
 ## Running
 
 ```bash
-cd /data/projects/infozerv/infoapp
+# First time or after major changes - clear cache
+npm run start:clear
+
+# Normal start
 npm start
-# Then: press 'a' for Android, 'w' for web, or scan with Expo Go
+
+# Platform-specific
+npm run web      # Web browser
+npm run android  # Android emulator/device
+npm run ios      # iOS simulator/device (macOS only)
 ```
 
 ## Tech stack
