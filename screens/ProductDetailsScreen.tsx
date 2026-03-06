@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { View, Text, ScrollView, Linking } from "react-native";
+import { View, Text, ScrollView, Linking, Image } from "react-native";
 import { useRoute, useNavigation, useFocusEffect } from "@react-navigation/native";
 import { AppLayout } from "../components/AppLayout";
 import { Card, CardContent, PlaceholderImage } from "../components/ui";

@@ -12,7 +12,7 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
-import { useRoute, useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useRoute, useNavigation, useFocusEffect, type RouteProp } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 import { AppLayout } from "../components/AppLayout";
 import { Button } from "../components/ui/Button";
@@ -76,7 +76,7 @@ function SubmissionRow({ s }: { s: ApiSubmissionItem }) {
 type RouteParams = { campaignId?: number; campaignTitle?: string };
 
 export function SubmitProofScreen() {
-  const route = useRoute<{ params?: RouteParams }>();
+  const route = useRoute<RouteProp<{ params: RouteParams }, "params">>();
   const navigation = useNavigation<any>();
   const campaignIdParam = route.params?.campaignId;
   const campaignTitleParam = route.params?.campaignTitle;
