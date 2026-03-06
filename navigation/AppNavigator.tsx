@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
-import { NavigationContainer, CommonActions } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { BottomNav } from "../components/BottomNav";
@@ -18,9 +18,24 @@ import {
   SubmitProofScreen,
 } from "../screens";
 
-const RootStack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Loading: undefined;
+  Login: undefined;
+  Main: undefined;
+};
+
+const RootStack = createNativeStackNavigator<RootStackParamList>();
 const MainStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+/** Shown while auth is loading. */
+function LoadingScreen() {
+  return (
+    <View style={styles.loading}>
+      <ActivityIndicator size="large" color="#1e3a5f" />
+    </View>
+  );
+}
 
 function MainTabs() {
   return (
@@ -51,48 +66,26 @@ function MainNavigator() {
 
 function AppNavigatorInner() {
   const { isAuthenticated, isLoading } = useAuth();
-  const navRef = useRef<React.ComponentRef<typeof NavigationContainer>>(null);
-  const prevAuthRef = useRef<boolean | null>(null);
-
-  // Only reset when isAuthenticated *changes* (login or logout), not on first mount
-  useEffect(() => {
-    if (isLoading) return;
-    const prev = prevAuthRef.current;
-    prevAuthRef.current = isAuthenticated;
-    if (prev === null) return; // first time: initialRouteName already correct, do nothing
-    if (prev === isAuthenticated) return;
-    const name = isAuthenticated ? "Main" : "Login";
-    navRef.current?.dispatch(
-      CommonActions.reset({ index: 0, routes: [{ name }] })
-    );
-  }, [isLoading, isAuthenticated]);
-
-  // Do not mount NavigationContainer until auth check is done (avoids context issues)
-  if (isLoading) {
-    return (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color="#1e3a5f" />
-      </View>
-    );
-  }
-
-  const initialRoute = isAuthenticated ? "Main" : "Login";
 
   return (
-    <NavigationContainer ref={navRef}>
-      <RootStack.Navigator
-        initialRouteName={initialRoute}
-        screenOptions={{ headerShown: false }}
-      >
-        <RootStack.Screen name="Login" component={LoginScreen} />
+    <RootStack.Navigator screenOptions={{ headerShown: false }}>
+      {isLoading ? (
+        <RootStack.Screen name="Loading" component={LoadingScreen} />
+      ) : isAuthenticated ? (
         <RootStack.Screen name="Main" component={MainNavigator} />
-      </RootStack.Navigator>
-    </NavigationContainer>
+      ) : (
+        <RootStack.Screen name="Login" component={LoginScreen} />
+      )}
+    </RootStack.Navigator>
   );
 }
 
 export function AppNavigator() {
-  return <AppNavigatorInner />;
+  return (
+    <NavigationContainer>
+      <AppNavigatorInner />
+    </NavigationContainer>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -17,4 +17,5 @@ fi
 
 source "$ENV_FILE"
 cd "$REPO_ROOT"
+# exec npx tsc --noEmit
 exec npx expo start --android
